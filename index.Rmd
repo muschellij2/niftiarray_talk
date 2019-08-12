@@ -5,8 +5,6 @@ logo: bloomberg.logo.small.horizontal.blue.png
 output:
   ioslides_presentation:
     css: neuroconductor.css
-    includes:
-      in_header: header.html
     md_extensions: -markdown_in_html_blocks
     self_contained: no
     widescreen: yes
