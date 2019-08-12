@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# smi\_2019
+# NiftiArray Talk
 
-Slides for a presentation for the
-[SMI 2019](https://sites.uci.edu/smi2019/) conference.
+Slides for a presentation for the Structural working group talk on the
+NiftiArray package: <https://github.com/muschellij2/niftiArray>.
