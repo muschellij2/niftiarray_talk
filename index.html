@@ -177,7 +177,7 @@ article {
 </ul>
 
 <blockquote>
-<p>For your single-precision floating-point image with about 1bn elements, the &ldquo;native&rdquo; data size in the C struct is roughly 4 GiB, while the R array uses 8 GiB because it uses double precision. When you use readNifti(…, internal=TRUE) the resulting object has only the C struct, but with readNifti(…, internal=FALSE) the object has both the C struct and the R array, for a total of 12 GiB.</p>
+<p>…the &ldquo;native&rdquo; data size in the C struct is roughly <strong>4 GiB</strong>, while the R array uses <strong>8 GiB</strong> because it uses double precision. .. <code>readNifti(..., internal=FALSE)</code> the object has both the C struct and the R array, for a total of 12 GiB.</p>
 </blockquote>
 
 <ul>
@@ -201,7 +201,7 @@ system.time({
 })</pre>
 
 <pre >##    user  system elapsed 
-##   0.125   0.016   0.142</pre>
+##   0.124   0.017   0.144</pre>
 
 <pre class = 'prettyprint lang-r'>system.time({
   narray = NiftiArray::writeNiftiArray(fname)
@@ -210,7 +210,7 @@ system.time({
 })</pre>
 
 <pre >##    user  system elapsed 
-##   4.512   0.114   4.670</pre>
+##   4.658   0.131   4.878</pre>
 
 </article></slide><slide class=""><hgroup><h2>Sizes</h2></hgroup><article  id="sizes">
 
@@ -409,15 +409,20 @@ system.time({
 
 </article></slide><slide class=""><hgroup><h2>What are the benefits? Reshaping to a Matrix</h2></hgroup><article  id="what-are-the-benefits-reshaping-to-a-matrix">
 
-<pre class = 'prettyprint lang-r'>d = dim(narray)
-d</pre>
+<pre class = 'prettyprint lang-r'>d = dim(narray); print(d)</pre>
 
 <pre >## [1] 182 218 182</pre>
 
 <pre class = 'prettyprint lang-r'>dim(narray) = c(d, 1)
 new_dim = c(prod(d), 1)
 newarray = writeNiftiArray(narray)
-mat = ReshapedNiftiArray(newarray@seed@filepath, dim = new_dim)
+dim(newarray)</pre>
+
+<pre >## [1] 182 218 182   1</pre>
+
+</article></slide><slide class=""><hgroup><h2>What are the benefits? Reshaping to a Matrix</h2></hgroup><article  id="what-are-the-benefits-reshaping-to-a-matrix-1">
+
+<pre class = 'prettyprint lang-r'>mat = ReshapedNiftiArray(newarray@seed@filepath, dim = new_dim)
 dim(mat)</pre>
 
 <pre >## [1] 7221032       1</pre>
@@ -454,6 +459,8 @@ from = NiftiArray::NiftiArray(nii_fname)
 dim(from)</pre>
 
 <pre >## [1] 96 96 60  3</pre>
+
+</article></slide><slide class=""><hgroup><h2>Why? 4D Example</h2></hgroup><article  id="why-4d-example-1">
 
 <pre class = 'prettyprint lang-r'>A &lt;- ReshapedNiftiArray(filepath = from@seed@filepath,
                        name = from@seed@name,

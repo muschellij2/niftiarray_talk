@@ -72,7 +72,7 @@ knitr::include_graphics("figure/performance.png")
 - `ANTsCore::antsImageRead` - installation is 
 - `RNifti::readNifti` - from https://github.com/jonclayden/RNifti/issues/14 :
 
-> For your single-precision floating-point image with about 1bn elements, the "native" data size in the C struct is roughly 4 GiB, while the R array uses 8 GiB because it uses double precision. When you use readNifti(..., internal=TRUE) the resulting object has only the C struct, but with readNifti(..., internal=FALSE) the object has both the C struct and the R array, for a total of 12 GiB. 
+> ...the "native" data size in the C struct is roughly **4 GiB**, while the R array uses **8 GiB** because it uses double precision. .. `readNifti(..., internal=FALSE)` the object has both the C struct and the R array, for a total of 12 GiB. 
 
 - None have random access (just read in one slice or 1 timepoint)
 
@@ -134,11 +134,16 @@ DelayedArray::extract_array(narray, index = list(NULL ,NULL, 1))
 ## What are the benefits? Reshaping to a Matrix
 
 ```{r}
-d = dim(narray)
-d
+d = dim(narray); print(d)
 dim(narray) = c(d, 1)
 new_dim = c(prod(d), 1)
 newarray = writeNiftiArray(narray)
+dim(newarray)
+```
+
+## What are the benefits? Reshaping to a Matrix
+
+```{r}
 mat = ReshapedNiftiArray(newarray@seed@filepath, dim = new_dim)
 dim(mat)
 head(mat)
@@ -162,6 +167,11 @@ nii_fname = system.file("extdata",
                         "example_4d.nii.gz", package = "RNifti")
 from = NiftiArray::NiftiArray(nii_fname)
 dim(from)
+```
+
+## Why? 4D Example
+
+```{r}
 A <- ReshapedNiftiArray(filepath = from@seed@filepath,
                        name = from@seed@name,
                        dim = c(prod(dim(from)[1:3]), dim(from)[4]))
