@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Building R Packages</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'Building R Packages',
+                        subtitle: 'source at <a href="https://github.com/muschellij2/smi_2019" class="uri">https://github.com/muschellij2/smi_2019</a>',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'bloomberg.logo.small.horizontal.blue.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  'John Muschelli, slides at <a href="http://johnmuschelli.com/smi_2019" class="uri">http://johnmuschelli.com/smi_2019</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link rel="stylesheet" type="text/css" href="papaya.css?version=0.8&build=979" />
+    <script type="text/javascript" src="papaya.js?version=0.8&build=979">
+      
+    </script>
+      <script type="text/javascript"> 
+        var params = []; 
+        params["images"] = ["T1.nii.gz"]; 
+        </script>
+  <link href="index_files/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="index_files/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="index_files/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="index_files/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="index_files/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="index_files/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="index_files/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="index_files/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="index_files/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="index_files/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    summary {
+      display: list-item;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+/* https://github.com/ropensci/plotly/pull/524#issuecomment-468142578 */
+slide:not(.current) .plotly.html-widget{
+  display: block;
+}
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(bloomberg.logo.small.horizontal.blue.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="neuroconductor.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="bloomberg.logo.small.horizontal.blue.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+          </hgroup>
+  </slide>
+
+<style type="text/css">
+article {
+  font-size: 28pt;
+}
+</style>
+
+<slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>What are R Packages?</h2></hgroup><article  id="what-are-r-packages">
+
+</article></slide><slide class=""><hgroup><h2>R Packages</h2></hgroup><article  id="r-packages" class="build">
+
+<ol class = 'build'>
+<li>Sets of Functions</li>
+<li>Set of Functions + Documentation</li>
+<li>Set of Functions + Documentation + Data</li>
+<li>Set of Functions + Documentation + Data + Vignettes</li>
+<li>Set of Functions + Documentation + Data + Vignettes + Versions</li>
+<li>Set of Functions + Documentation + Data + Vignettes + Versions + Dependencies</li>
+</ol>
+
+</article></slide><slide class=""><hgroup><h2>The resource with All the information</h2></hgroup><article  id="the-resource-with-all-the-information">
+
+<p><a href='https://cran.r-project.org/doc/manuals/r-release/R-exts.html' title=''>https://cran.r-project.org/doc/manuals/r-release/R-exts.html</a></p>
+
+<p><img src="figure/writing_r_extensions.png" width="100%" /></p>
+
+</article></slide><slide class=""><hgroup><h2>What’s in a Name?</h2></hgroup><article  id="whats-in-a-name">
+
+<p>Package Names:</p>
+
+<ul>
+<li>must start with letter</li>
+<li>no underscores</li>
+<li>periods allowable or use CamelCase</li>
+<li>can have numbers</li>
+<li>should be Google-able</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>What’s in a Name?</h2></hgroup><article  id="whats-in-a-name-1">
+
+<p>If you have a package name in mind before you start, use the <code>available</code> package:</p>
+
+<pre class = 'prettyprint lang-r'>install.packages(&quot;available&quot;)
+available::available(&quot;packageName&quot;)</pre>
+
+<p>Checks CRAN/Bioconductor/GitHub for potentially similar package names.</p>
+
+</article></slide><slide class=""><hgroup><h2>Starting Up</h2></hgroup><article  id="starting-up">
+
+<ul>
+<li>This will use <a href='https://github.com/' title=''>GitHub</a> for packages, sign up for an account if you don’t have one.</li>
+</ul>
+
+<p>Use RStudio and the <code>devtools</code> and <code>usethis</code> packages. It’s easier.</p>
+
+<pre class = 'prettyprint lang-r'>install.packages(&quot;devtools&quot;)
+install.packages(&quot;usethis&quot;)</pre>
+
+<p>In RStudio, File -&gt; New Project -&gt; New Directory -&gt; R Package using devtools (scroll down).</p>
+
+</article></slide><slide class=""><hgroup><h2>Trying our first build</h2></hgroup><article  id="trying-our-first-build">
+
+<p>In RStudio, click <code>Build → Clean and Rebuild</code>.</p>
+
+<p>Boom! You have a package installed.</p>
+
+<p>In RStudio, click <code>Build → Check Package</code>.</p>
+
+<p>This checks our package.</p>
+
+</article></slide><slide class=""><hgroup><h2>Setting Up RStudio</h2></hgroup><article  id="setting-up-rstudio">
+
+<p>Go to Build -&gt; Configure Build Tools</p>
+
+<p>Add <code>--as-cran</code> to &ldquo;Check Package&rdquo; (may not be necessary anymore)</p>
+
+<p><img src="r_packages_figures/build_tools.png" style="width: 45%; display: block; margin: auto;"></p>
+
+</article></slide><slide class=""><hgroup><h2>Setting Up: Documentation</h2></hgroup><article  id="setting-up-documentation">
+
+<p>In RStudio, click <code>Build → Configure Build Tools → Generate Documentation with Roxygen</code>. If that is gray, install <code>roxygen2</code>.</p>
+
+<pre class = 'prettyprint lang-r'>install.packages(&quot;roxygen2&quot;)</pre>
+
+<p><img src="r_packages_figures/roxygen.png" style="width: 45%; display: block; margin: auto;"></p>
+
+</article></slide><slide class=""><hgroup><h2>DESCRIPTION file</h2></hgroup><article  id="description-file">
+
+<p><img src="r_packages_figures/goto.png" width="100%" /></p>
+
+<p>In the RStudio project, go to &ldquo;Go to file/function&rdquo; search bar on the menu bar. Also <code>Ctrl + .</code> on Mac.</p>
+
+<ul>
+<li>This searches through the files in the package.
+
+<ul>
+<li>Also searches for <strong>function names</strong> and can go to that function in the file</li>
+</ul></li>
+</ul>
+
+<p>Type <code>DESCRIPTION</code> and open that file.</p>
+
+</article></slide><slide class=""><hgroup><h2></h2></hgroup><article >
+
+<p><img src="r_packages_figures/DESCRIPTION.png" width="100%" /></p>
+
+</article></slide><slide class=""><hgroup><h2></h2></hgroup><article >
+
+<p><img src="r_packages_figures/DESCRIPTION_overlay.png" width="100%" /></p>
+
+</article></slide><slide class=""><hgroup><h2>DESCRIPTION: Package Title</h2></hgroup><article  id="description-package-title">
+
+<p>Change the <code>Title</code> so that it’s Title Case and make sure to put single quotes around weird words (like science-specific).</p>
+
+<pre class = 'prettyprint lang-yaml'>Title: How to Analyze Data and Images</pre>
+
+<ul>
+<li>do <strong>not</strong> start with R package or Package</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>DESCRIPTION: Description</h2></hgroup><article  id="description-description">
+
+<p>Change the <code>Description</code> so that it’s a sentence (prose) and it ends with a period.</p>
+
+<p>Also I keep putting single quotes around weird words (like science-specific). Make sure to put links in angle brackets (<code>&lt;http...&gt;</code>).</p>
+
+<p>Use DOIs if you can (<code>&lt;doi...&gt;</code>). If you go too long on a line, indent it with 4 spaces and go to the next.</p>
+
+<ul>
+<li>Look at some of favorite package descriptions</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>DESCRIPTION: additional fields</h2></hgroup><article  id="description-additional-fields" class="build">
+
+<ul>
+<li><strong>Imports:</strong> package1, package2
+
+<ul>
+<li>packages with functions we need <strong>in code</strong></li>
+</ul></li>
+<li><strong>Depends:</strong> package3, package5
+
+<ul>
+<li><strong>ALL</strong> functions loaded from package, but <strong>loaded in user library</strong> before your package</li>
+<li>Similar to <code>library(package3); library(yourpackage)</code> - not recommended</li>
+</ul></li>
+<li><strong>Suggests:</strong> package4, package6: used in <strong>examples</strong> or <strong>vignettes</strong></li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>DESCRIPTION: not so fun default</h2></hgroup><article  id="description-not-so-fun-default">
+
+<p>In the RStudio build, it may add something like:</p>
+
+<pre class = 'prettyprint lang-bash'>Depends: R (&gt;= 3.5.3)</pre>
+
+<p>This is not great because anyone with a lower <code>R</code> version (like <code>3.4</code>) cannot install your package. Unless you need the newest <code>R</code> functionality, delete this line.</p>
+
+</article></slide><slide class=""><hgroup><h2>Authors</h2></hgroup><article  id="authors">
+
+<p>I add this to the <code>DESCRIPTION</code> file (and remove <code>Author:</code> field):</p>
+
+<pre class = 'prettyprint lang-yaml'>Authors@R: person(given = &quot;John&quot;,
+           family = &quot;Muschelli&quot;,
+           role = c(&quot;aut&quot;, &quot;cre&quot;),
+           email = &quot;muschellij2@gmail.com&quot;,
+           comment = c(ORCID = &quot;0000-0001-6469-1750&quot;))</pre>
+
+</article></slide><slide class=""><hgroup><h2>Authors</h2></hgroup><article  id="authors-1">
+
+<p>I use <code>Authors@R</code> even if there is only one author because of the <a href='https://github.com/r-lib/desc/issues/44' title=''><code>desc</code> package issue</a> and that package is relied upon for site building and stuff later.</p>
+
+<div class="container">
+
+<div id="left_col">
+<p>Roles, see <code>?person</code></p>
+
+<ul>
+<li><code>cre</code> - creator/maintainer, can only have one</li>
+<li><code>aut</code> = author, can have multiple</li>
+</ul></div>
+
+<div id="right_col">
+
+<img src="figure/highlander.gif" style="width:120%; margin: auto;" alt="flow">
+
+<div>
+
+
+</article></slide><slide class=""><hgroup><h2>Maintainer</h2></hgroup><article  id="maintainer">
+
+<p>If you use <code>Authors@R</code>, you should be able to remove the Maintainer field, but I don’t. I am explicit about <code>Maintainer</code> because some people use that field as some parsers use <code>Author</code> and not <code>Authors@R</code>.</p>
+
+<pre >Maintainer: John Muschelli &lt;muschellij2@gmail.com&gt;</pre>
+
+</article></slide><slide class=""><hgroup><h2>License</h2></hgroup><article  id="license">
+
+<p>I use <code>License: GPL-3</code> or <code>GPL-2</code>.</p>
+
+<ul>
+<li>For GPL-3:</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>usethis::use_gpl3_license()</pre>
+
+<p><a href='https://www.r-project.org/Licenses/' title=''>https://www.r-project.org/Licenses/</a></p>
+
+<p><a href='https://kbroman.org/pkg_primer/pages/licenses.html' title=''>https://kbroman.org/pkg_primer/pages/licenses.html</a></p>
+
+</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Documenting Your Package</h2></hgroup><article  id="documenting-your-package">
+
+</article></slide><slide class=""><hgroup><h2>Roxygen2</h2></hgroup><article  id="roxygen2">
+
+<p>Roxygen allows for functions and documentation in the same file. Let’s make a function:</p>
+
+<pre class = 'prettyprint lang-r'>top = function(x, n) {
+  xx = x[1:n, 1:n]
+  hist(xx)
+  print(xx)
+}</pre>
+
+<p>Save this to <code>top.R</code> file in <code>R/</code> (where R functions are). Delete <code>hello.R</code> file if present.</p>
+
+</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Function names should likely be verbs</h2></hgroup><article  id="function-names-should-likely-be-verbs">
+
+</article></slide><slide class=""><hgroup><h2>Adding a package to DESCRIPTION field</h2></hgroup><article  id="adding-a-package-to-description-field">
+
+<p>Say you want to use <code>dplyr</code> functions for your code:</p>
+
+<pre class = 'prettyprint lang-r'>usethis::use_package(&quot;dplyr&quot;)</pre>
+
+<p>but what if you did this instead? (Function masking)</p>
+
+<pre class = 'prettyprint lang-r'>usethis::use_package(&quot;dplyr&quot;, type = &quot;Depends&quot;)</pre>
+
+</article></slide><slide class=""><hgroup><h2>Creating a roxygen header</h2></hgroup><article  id="creating-a-roxygen-header">
+
+<p>Highlight the following code:</p>
+
+<pre class = 'prettyprint lang-r'>top = function(x, n) {</pre>
+
+<p>Go to <code>Code -&gt; Insert Roxygen Skeleton</code></p>
+
+</article></slide><slide class=""><hgroup><h2>Roxygen header</h2></hgroup><article  id="roxygen-header">
+
+<p>Roxygen header (what turns into a help file):</p>
+
+<pre >#&#39; Title
+#&#39;
+#&#39; @param x 
+#&#39; @param n 
+#&#39;
+#&#39; @return
+#&#39; @export
+#&#39;
+#&#39; @examples</pre>
+
+</article></slide><slide class=""><hgroup><h2>Roxygen tags</h2></hgroup><article  id="roxygen-tags">
+
+<ul>
+<li><code>@param</code> stands for a parameter/argument for that function.<br/></li>
+<li><code>@return</code> denotes what the function returns. This is required.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Roxygen tags</h2></hgroup><article  id="roxygen-tags-1">
+
+<ul>
+<li><code>@export</code> - when people install your package, can they use this function
+
+<ul>
+<li>non-exported functions are usually helpers, really small, or not fully formed yet</li>
+<li><code>@examples</code> - code to show how the function works. Wrap functions in <code>\dontrun{}</code> if not wanted to run and <code>\donttest{}</code> for not testing
+
+<ul>
+<li>make sure <code>\dontrun{}</code> not <code>\dontrun {}</code> (spaces fail)</li>
+</ul></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Full roxygen header</h2></hgroup><article  id="full-roxygen-header">
+
+<pre >#&#39; Print the top of a matrix
+#&#39; @param x a \code{matrix}
+#&#39; @param n Number of rows and columns to display of the matrix
+#&#39;
+#&#39; @return A \code{NULL}
+#&#39; @export
+#&#39;
+#&#39; @examples 
+#&#39; mat = matrix(rnorm(100), nrow = 10)
+#&#39; top(mat, n = 4)
+#&#39; \dontrun{
+#&#39;    top(mat, n = 10)
+#&#39; }</pre>
+
+</article></slide><slide class=""><hgroup><h2>Roxygen header: title/description unique</h2></hgroup><article  id="roxygen-header-titledescription-unique">
+
+<p>Instead of <code>Title</code>, you can use separate <code>@title</code> and <code>@description</code> tags if you want them to be different. For example:</p>
+
+<pre >#&#39; @title Print the top of a matrix
+#&#39; @description \code{top} is a small function to not just present the first rows</pre>
+
+</article></slide><slide class=""><hgroup><h2>Roxygen and Markdown</h2></hgroup><article  id="roxygen-and-markdown">
+
+<p>If you want to use <code>markdown</code> with <code>roxygen2</code>, then you can use</p>
+
+<pre class = 'prettyprint lang-r'>usethis::use_roxygen_md()</pre>
+
+<p>so instead of <code>\code{top}</code> you can write <code>`top`</code> from the previous slide.</p>
+
+</article></slide><slide class=""><hgroup><h2>NAMESPACE</h2></hgroup><article  id="namespace">
+
+<p><img src="r_packages_figures/NAMESPACE.png" width="100%" /></p>
+
+</article></slide><slide class=""><hgroup><h2>NAMESPACE</h2></hgroup><article  id="namespace-1">
+
+<p><img src="r_packages_figures/NAMESPACE_overlay.png" width="100%" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Building the NAMESPACE with roxygen</h2></hgroup><article  id="building-the-namespace-with-roxygen">
+
+<p>In Roxygen:</p>
+
+<ul>
+<li><code>@export</code> - adds this to the NAMESPACE file
+
+<ul>
+<li>when package is installed, users can call this function</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Building the NAMESPACE with roxygen</h2></hgroup><article  id="building-the-namespace-with-roxygen-1">
+
+<p>In Roxygen:</p>
+
+<ul>
+<li><code>@import</code> - imports <strong>ALL</strong> functions from that package
+
+<ul>
+<li>if package is listed under Depends in DESCRIPTION, then the <strong>whole package</strong> is loaded when you load your package</li>
+<li>otherwise it simply exposes them for your package to use them, but not the user, users still have to do <code>library(PACKAGENAME)</code></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>You do not have <code>library()</code> functions in R package code</h2></hgroup><article  id="you-do-not-have-library-functions-in-r-package-code">
+
+</article></slide><slide class=""><hgroup><h2>Check</h2></hgroup><article  id="check">
+
+<p>Go to <code>Build → Check Package</code>. You should see something like:</p>
+
+<pre >   top: no visible global function definition for ‘hist’
+   Undefined global functions or variables:
+     hist
+   Consider adding
+     importFrom(&quot;graphics&quot;, &quot;hist&quot;)
+   to your NAMESPACE file.</pre>
+
+</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>The Goal is to have NO Errors/Warnings/Notes on R CMD Check</h2></hgroup><article  id="the-goal-is-to-have-no-errorswarningsnotes-on-r-cmd-check">
+
+</article></slide><slide class=""><hgroup><h2>Why the Message?</h2></hgroup><article  id="why-the-message">
+
+<p>R sees <code>hist</code> from <code>graphics</code>, but we never told it we needed it</p>
+
+<p>You <em>should</em> import anything explicitly other than from the <code>base</code> package, includying anything from <code>stats</code> (e.g. <code>quantile</code>) or <code>graphics</code> (e.g. <code>hist</code>). Don’t import <code>base</code>.</p>
+
+</article></slide><slide class=""><hgroup><h2>Importing Packages or Functions from Packages</h2></hgroup><article  id="importing-packages-or-functions-from-packages">
+
+<ul>
+<li><code>@importFrom</code> - if you want to import a <strong>function</strong>, you say <code>@import PACKAGENAME func1 func2</code>
+
+<ul>
+<li>only imports these functions (preferred to <code>@import</code>)</li>
+<li>if <code>pkgA</code> has function <code>A</code> and <code>pkgB</code> has functions <code>A</code> and <code>B</code>, if <code>@import pkgA A</code>, <code>@import pkgB B</code>, then if you call <code>A()</code>, R knows it’s from <code>pkgA</code></li>
+<li>But should use <code>pkgA::A()</code> in practice</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Fixing the Message</h2></hgroup><article  id="fixing-the-message">
+
+<p>Add <code>@importFrom graphics hist</code> to your <code>top.R</code> file (anywhere in the header)</p>
+
+<ul>
+<li>RStudio: <code>Build → Check Package</code> again</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Importing Package Functions</h2></hgroup><article  id="importing-package-functions">
+
+<ul>
+<li>You only have to import a whole package or a package function, don’t mix and match</li>
+<li>You only have to import a function in <strong>one</strong> file.</li>
+<li><p>e.g put <code>@importFrom graphics hist</code> in any <code>.R</code> file.</p></li>
+<li>Any package you want to import, make sure you use <code>use_package</code>, so we’d use:</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>usethis::use_package(&quot;graphics&quot;)</pre>
+
+</article></slide><slide class=""><hgroup><h2>Build and Reload Again</h2></hgroup><article  id="build-and-reload-again">
+
+<ul>
+<li>RStudio: Go to <code>Build → Build and Reload</code> the package
+
+<ul>
+<li>First time you may see some warnings (no NAMESPACE file!)</li>
+<li>Rerunning may get rid of these</li>
+</ul></li>
+<li>Then try <code>Build → Check Package</code></li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Troubleshooting</h2></hgroup><article  id="troubleshooting">
+
+<p>In case things are not working or seem off</p>
+
+<ul>
+<li>Delete the <code>NAMESPACE</code> file. If building fails, add an empty file with</li>
+</ul>
+
+<pre ># Generated by roxygen2: do not edit by hand</pre>
+
+<p>at the top and rerun. - Delete the <code>man</code> folder - <code>roxygen2</code> will create the documentation automatically</p>
+
+</article></slide><slide class=""><hgroup><h2>Including Data</h2></hgroup><article  id="including-data">
+
+<ul>
+<li>Data should be small, but good for running examples or vignettes.</li>
+</ul>
+
+<p>Run <code>use_data_raw()</code> if you have code to generate data (R data):</p>
+
+<pre class = 'prettyprint lang-r'>usethis::use_data_raw()</pre>
+
+<p>This will create a <code>data-raw</code> folder.</p>
+
+</article></slide><slide class=""><hgroup><h2>Including Data</h2></hgroup><article  id="including-data-1">
+
+<p>Let’s say you want to make a data set <code>mydata_set</code>:</p>
+
+<p>Create <code>data-raw/mydata_set.R</code> and at the end, run</p>
+
+<pre class = 'prettyprint lang-r'>usethis::use_data(mydata_set, compress = &quot;xz&quot;)</pre>
+
+<p>And this will make a <code>data/mydata_set.rda</code> file.</p>
+
+</article></slide><slide class=""><hgroup><h2>Documenting Data</h2></hgroup><article  id="documenting-data">
+
+<ul>
+<li>You don’t export data.</li>
+</ul>
+
+<pre >#&#39; My Awesome Data Set
+#&#39;
+#&#39; A more detailed description
+#&#39;
+#&#39; @format A `data.frame` with 2 columns elements, which are:
+#&#39; \describe{
+#&#39; \item{x1}{column of x variables}
+#&#39; \item{y2}{column of yvariables}
+#&#39; }
+&quot;mydata_set&quot;</pre>
+
+</article></slide><slide class=""><hgroup><h2>Including Non-R data</h2></hgroup><article  id="including-non-r-data">
+
+<p>If you want to include other types of data (such as images) put them into the <code>inst/</code> folder (or a subfolder of <code>inst</code>, I recommend <code>extdata</code>). You can access them using <code>system.file</code> when installed.</p>
+
+<p>For example, if you have a file <code>inst/extdata/myimage.nii.gz</code>:</p>
+
+<pre class = 'prettyprint lang-r'>system.file(&quot;extdata&quot;, &quot;myimage.nii.gz&quot;, package = &quot;YOUR_PACKAGE_NAME&quot;)</pre>
+
+<p>will return the filename for you to access it in code.</p>
+
+</article></slide><slide class=""><hgroup><h2>Unit Tests</h2></hgroup><article  id="unit-tests">
+
+<p>Unit testing packages: <code>testthat</code> and <code>RUnit</code>.</p>
+
+<p>To use <code>testthat</code>, run <code>usethis::use_testthat()</code>. All test files must be in <code>testthat/tests/</code> and must start with the word <code>test</code>.</p>
+
+<pre class = 'prettyprint lang-r'>testthat::test_that(&quot;Description of test&quot;, { 
+# code for test
+testthat::expect_equal(r, 3.5523334)
+testthat::expect_true(x)
+testthat::expect_is(my_df, &quot;data.frame&quot;)
+})</pre>
+
+</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Good Rule of Thumb: Any issue created/bug found gets a test</h2></hgroup><article  id="good-rule-of-thumb-any-issue-createdbug-found-gets-a-test">
+
+</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>If used in a paper, make sure tests check paper results</h2></hgroup><article  id="if-used-in-a-paper-make-sure-tests-check-paper-results">
+
+</article></slide><slide class=""><hgroup><h2>What to test</h2></hgroup><article  id="what-to-test">
+
+<ul>
+<li>Object output type (list/data.frame)</li>
+<li>Expected output value (3.233453)</li>
+<li>Multiple inputs give expected output</li>
+<li>Even graphs: <a href='https://github.com/r-lib/vdiffr' title=''>https://github.com/r-lib/vdiffr</a></li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Creating Vignettes</h2></hgroup><article  id="creating-vignettes">
+
+<pre class = 'prettyprint lang-r'>usethis::use_vignette(&quot;my-vignette&quot;)</pre>
+
+<p><code>title</code> is on the document, <code>VignetteIndexEntry</code> is on the website:</p>
+
+<pre >---
+title: &quot;my-vignette&quot;
+output: rmarkdown::html_vignette
+vignette: &gt;
+  %\VignetteIndexEntry{my-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---</pre>
+
+</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>95% of what you will be doing is now covered. Mostly it will be documenting and examples</h2></hgroup><article  id="of-what-you-will-be-doing-is-now-covered.-mostly-it-will-be-documenting-and-examples">
+
+</article></slide><slide class=""><hgroup><h2>Creating a README</h2></hgroup><article  id="creating-a-readme">
+
+<pre class = 'prettyprint lang-r'>usethis::use_readme_rmd()</pre>
+
+<p>This will create a <code>README.Rmd</code> file for your GitHub/Package.</p>
+
+<ul>
+<li>GitHub renders the README.</li>
+<li>Instructions on how to use the package (examples)</li>
+<li>Instructions on installing 3rd-party dependencies</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Spell Checking</h2></hgroup><article  id="spell-checking">
+
+<p>Believe it or not, CRAN will check some spelling.</p>
+
+<pre class = 'prettyprint lang-r'>devtools::spell_check()</pre>
+
+<p>after you have fixed the issues, run</p>
+
+<pre class = 'prettyprint lang-r'>spelling::update_wordlist()</pre>
+
+<p>to make a WORDLIST file. These are correctly spelled but likely jargon.</p>
+
+</article></slide><slide class=""><hgroup><h2>Creating NEWS.md</h2></hgroup><article  id="creating-news.md">
+
+<pre class = 'prettyprint lang-r'>usethis::use_news_md()</pre>
+
+<p>This will create a <code>NEWS.md</code> file to update with new versions of the package, discussing changes (CRAN Requires).</p>
+
+<pre >package 0.2.0
+- Added function `get_data`
+- Fixed bug in `bad_function` (fixes issue #52).</pre>
+
+</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Continuous Integration</h2></hgroup><article  id="continuous-integration">
+
+</article></slide><slide class=""><hgroup><h2>Continuous Integration: Testing on the Cloud</h2></hgroup><article  id="continuous-integration-testing-on-the-cloud">
+
+<ul>
+<li>Travis tests Linux/OSX and Appveyor tests Windows</li>
+<li>Integrate with GitHub, each push tested</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>usethis::use_git()
+usethis::use_github() # must have GITHUB_PAT set up
+usethis::use_appveyor()
+usethis::use_travis()</pre>
+
+</article></slide><slide class=""><hgroup><h2><code>appveyor.yml</code></h2></hgroup><article  id="appveyor.yml">
+
+<p>Add the following lines:</p>
+
+<pre >environment:
+  global:
+    WARNINGS_ARE_ERRORS: 1</pre>
+
+<p>to <code>appveyor.yml</code> to make sure warnings are treated as errors.</p>
+
+</article></slide><slide class=""><hgroup><h2>Code Coverage</h2></hgroup><article  id="code-coverage">
+
+<ul>
+<li>Code coverage is the percentage of code (without whitespace) which is covered by automated tests.</li>
+<li>Calculated using <a href='https://github.com/r-lib/covr' title=''><code>covr</code></a> package.</li>
+<li>I tend to check coverage by examples, vignettes <strong>and</strong> tests vs. just tests (default).</li>
+<li>You can run <code>covr::package_coverage(type = &quot;all&quot;)</code> locally.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Code Coverage with Continuous Integration</h2></hgroup><article  id="code-coverage-with-continuous-integration">
+
+<ul>
+<li>Run <code>usethis::use_coverage()</code>, with either <a href='https://coveralls.io' title=''><code>coveralls</code></a> or <a href='https://codecov.io/' title=''><code>codecov</code></a>.
+
+<ul>
+<li>Add lines to <code>.travis.yml</code> if necessary</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Releasing to CRAN</h2></hgroup><article  id="releasing-to-cran">
+
+<ul>
+<li>Push all changes to GitHub.</li>
+<li><code>usethis::use_cran_comments()</code></li>
+<li>Try your package on <a href='https://github.com/r-hub/rhub' title=''><code>rhub</code></a> with <code>devtools::check_rhub()</code></li>
+<li>Run on CRAN Windows build <code>devtools::check_win_devel()</code></li>
+<li>Run <code>devtools::release(check = TRUE)</code> and go through the steps</li>
+<li>Validate the email from CRAN for submission.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>This is just a starting point</h2></hgroup><article  id="this-is-just-a-starting-point">
+
+<ul>
+<li>A lot of additional things we can discuss individually</li>
+<li><a href='https://cran.r-project.org/doc/manuals/r-release/R-exts.html' title=''>https://cran.r-project.org/doc/manuals/r-release/R-exts.html</a>, though huge, should cover &ldquo;everything&rdquo;</li>
+<li>Most of the work is documentation (80%) and vignettes and tests (20%)</li>
+</ul>
+
+</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Extra Slides</h2></hgroup><article  id="extra-slides">
+
+</article></slide><slide class=""><hgroup><h2>Making a Website</h2></hgroup><article  id="making-a-website">
+
+<ul>
+<li><code>pkgdown</code> makes nice doc pages for your package</li>
+<li>Run <code>usethis::use_pkgdown()</code>. Then run <code>pkgdown::build_site()</code>.</li>
+<li>Push everything to GitHub.</li>
+<li>Go to GitHub repo → Settings → Scroll down to &ldquo;GitHub Pages&rdquo;, set Source to <code>master branch /docs folder</code></li>
+<li>Refresh your webpage.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>No visible binding for global variable issue</h2></hgroup><article  id="no-visible-binding-for-global-variable-issue">
+
+<p>If you get <code>No visible binding for global variable</code>, you’re likely using Non-Standard Evaluation (NSE) or tidy evaluation</p>
+
+</article></slide><slide class=""><hgroup><h2>No visible binding for global variable issue</h2></hgroup><article  id="no-visible-binding-for-global-variable-issue-1">
+
+<p>2 options, follow different approaches:</p>
+
+<ol>
+<li><a href='https://stackoverflow.com/a/12429344' title=''>Use globalVariables</a></li>
+<li>Let’s say <code>col5</code> is the global variable. At top of function write:</li>
+</ol>
+
+<pre class = 'prettyprint lang-r'>col5 = NULL # set to something
+rm(list = &quot;col5&quot;) # remove it </pre>
+
+<p>This will remove it but not be a &ldquo;global&rdquo; fix. Also, make sure <code>col5</code> is <strong>not</strong> an argument in your function</p>
+
+</article></slide><slide class=""><hgroup><h2>Skipping tests on CRAN/CI</h2></hgroup><article  id="skipping-tests-on-cranci">
+
+<ul>
+<li>Use <code>testthat::skip_on_cran()</code> for skipping CRAN tests</li>
+<li><code>testthat::skip_on_travis()</code> and <code>testthat::skip_on_appveyor()</code> for CI</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>You Want the Pipe but not <code>dplyr</code></h2></hgroup><article  id="you-want-the-pipe-but-not-dplyr">
+
+<p>Run</p>
+
+<pre class = 'prettyprint lang-r'>usethis::use_pipe()</pre>
+
+</article></slide><slide class=""><hgroup><h2>Making a Logo/Hex Sticker</h2></hgroup><article  id="making-a-logohex-sticker">
+
+<p>Install the <a href='https://github.com/GuangchuangYu/hexSticker' title=''><code>hexSticker</code> package</a></p>
+
+<pre class = 'prettyprint lang-r'>library(hexSticker)
+library(desc)
+desc = desc::description$new()
+fig_dir = file.path(&quot;man&quot;, &quot;figures&quot;)
+if (dir.exists(fig_dir)) {
+  dir.create(fig_dir, recursive = TRUE)
+}
+package = desc$get(&quot;Package&quot;)
+hexSticker::sticker(
+  package = package,
+  # add code here
+  filename = file.path(fig_dir, &quot;sticker.png&quot;))
+usethis::use_logo(file.path(fig_dir, &quot;sticker.png&quot;))</pre></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>
